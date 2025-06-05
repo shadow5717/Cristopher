@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juego de Tic Tac Toe</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 50px;
+      background: #f0f8ff;
+    }
+    h1 {
+      color: #333;
+    }
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-gap: 5px;
+      margin-top: 20px;
+    }
+    .cell {
+      width: 100px;
+      height: 100px;
+      background: white;
+      border: 2px solid #444;
+      font-size: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+    .cell:hover {
+      background-color: #e0f7fa;
+    }
+    .restart {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎮 Tic Tac Toe</h1>
+  <div class="board" id="board"></div>
+  <button class="restart" onclick="startGame()">Reiniciar</button>
+
+  <script>
+    let board;
+    let currentPlayer;
+
+    function startGame() {
+      board = ["", "", "", "", "", "", "", "", ""];
+      currentPlayer = "X";
+      const boardElement = document.getElementById("board");
+      boardElement.innerHTML = "";
+      board.forEach((_, i) => {
+        const cell = document.createElement("div");
+        cell.className = "cell";
+        cell.dataset.index = i;
+        cell.addEventListener("click", handleClick);
+        boardElement.appendChild(cell);
+      });
+    }
+
+    function handleClick(e) {
+      const index = e.target.dataset.index;
+      if (board[index] === "") {
+        board[index] = currentPlayer;
+        e.target.textContent = currentPlayer;
+        if (checkWinner()) {
+          setTimeout(() => alert(`¡Ganó ${currentPlayer}!`), 10);
+        } else if (board.every(cell => cell !== "")) {
+          setTimeout(() => alert("¡Empate!"), 10);
+        } else {
+          currentPlayer = currentPlayer === "X" ? "O" : "X";
+        }
+      }
+    }
+
+    function checkWinner() {
+      const combos = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
+      ];
+      return combos.some(c => 
+        board[c[0]] && board[c[0]] === board[c[1]] && board[c[1]] === board[c[2]]
+      );
+    }
+
+    startGame();
+  </script>
+</body>
+</html>
